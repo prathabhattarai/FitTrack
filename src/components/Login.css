@@ -1,0 +1,518 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ===== LOGIN PAGE WRAPPER ===== */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #0a0a0a;
+  font-family: 'Poppins', sans-serif;
+  padding: 20px;
+}
+
+/* ===== OUTER CARD ===== */
+.login-container {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 580px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+/* ===================================================
+   LEFT SIDE — FORM (dark background)
+=================================================== */
+.login-page .form-side {
+  flex: 1.1;
+  background: #141414;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 50px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Blob shape that overlaps into right side */
+.login-page .form-side::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -80px;
+  width: 200px;
+  height: 120%;
+  background: #141414;
+  border-radius: 50% 60% 60% 50% / 40% 50% 50% 40%;
+  z-index: 1;
+}
+
+.login-page .form-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 360px;
+}
+
+/* ===== FORM HEADER ===== */
+.login-page .form-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-page .form-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.login-page .form-subtitle {
+  font-size: 0.9rem;
+  color: #777;
+  font-weight: 400;
+}
+
+/* ===== ALERT ===== */
+.login-page .login-alert {
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  animation: alertSlide 0.3s ease forwards;
+  width: 100%;
+}
+
+@keyframes alertSlide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-page .login-alert.error {
+  background: rgba(255, 60, 0, 0.12);
+  border: 1px solid rgba(255, 60, 0, 0.4);
+  color: #ff7a50;
+}
+
+.login-page .login-alert.success {
+  background: rgba(76, 175, 130, 0.12);
+  border: 1px solid rgba(76, 175, 130, 0.4);
+  color: #4caf82;
+}
+
+/* ===== FORM GROUPS ===== */
+.login-page .login-form {
+  width: 100%;
+}
+
+.login-page .form-group {
+  margin-bottom: 18px;
+}
+
+/* Input with icon */
+.login-page .input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login-page .input-icon {
+  position: absolute;
+  left: 16px;
+  color: #ff3c00;
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.login-page .form-input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border-radius: 12px;
+  border: 1.5px solid #2a2a2a;
+  background: #1e1e1e;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.login-page .form-input:focus {
+  border-color: #ff3c00;
+  background: #222;
+  box-shadow: 0 0 0 3px rgba(255, 60, 0, 0.12);
+}
+
+.login-page .form-input::placeholder {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.login-page .form-input.input-error {
+  border-color: #ff4444;
+  background: rgba(255, 68, 68, 0.07);
+}
+
+.login-page .form-input.input-success {
+  border-color: #4caf82;
+}
+
+.login-page .field-error-msg {
+  display: block;
+  color: #ff7a50;
+  font-size: 0.76rem;
+  margin-top: 5px;
+  padding-left: 4px;
+}
+
+/* Password toggle */
+.login-page .toggle-password {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.login-page .toggle-password:hover {
+  color: #ff3c00;
+}
+
+/* Role select — no icon offset since it has its own padding */
+.login-page select.form-input {
+  padding-left: 44px;
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+select.form-input option {
+  background: #1e1e1e;
+  color: #fff;
+}
+
+/* ===== ROW: Remember me + Forgot ===== */
+.login-page .form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.login-page .remember-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  color: #777;
+  cursor: pointer;
+  user-select: none;
+}
+
+.login-page .remember-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #ff3c00;
+  cursor: pointer;
+}
+
+.login-page .forgot-link {
+  background: none;
+  border: none;
+  color: #ff3c00;
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  padding: 0;
+}
+
+.login-page .forgot-link:hover {
+  opacity: 0.75;
+}
+
+/* ===== SIGN IN BUTTON ===== */
+.btn-login-submit {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #ff3c00 0%, #ff6a00 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 24px rgba(255, 60, 0, 0.35);
+}
+
+.btn-login-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e03500 0%, #ff5500 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 60, 0, 0.5);
+}
+
+.btn-login-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-login-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner */
+.btn-spinner {
+  width: 17px;
+  height: 17px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== DIVIDER ===== */
+.login-page .divider {
+  display: flex;
+  align-items: center;
+  margin: 22px 0;
+  gap: 12px;
+}
+
+.login-page .divider-line {
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+
+.login-page .divider-text {
+  font-size: 0.8rem;
+  color: #444;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* ===== REGISTER PROMPT ===== */
+.login-page .register-prompt {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.login-page .register-link {
+  background: none;
+  border: none;
+  color: #ff3c00;
+  font-weight: 700;
+  font-size: 0.88rem;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  padding: 0;
+}
+
+.login-page .register-link:hover {
+  opacity: 0.75;
+}
+
+/* ===================================================
+   RIGHT SIDE — WELCOME (orange-to-black gradient)
+=================================================== */
+.login-page .image-side {
+  flex: 1;
+  background: linear-gradient(145deg, #ff3c00 0%, #c42800 40%, #1a0a00 80%, #0a0a0a 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 50px 60px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative glow circles */
+.login-page .image-side::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,100,0,0.25) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.login-page .image-side::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: 20px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(circle, rgba(255,60,0,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+
+.login-page .welcome-content {
+  position: relative;
+  z-index: 2;
+}
+
+.login-page .brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.login-page .logo-icon {
+  font-size: 2rem;
+  color: #fff;
+}
+
+.login-page .brand-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.login-page .welcome-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.login-page .welcome-title span {
+  color: #ffb38a;
+}
+
+.login-page .welcome-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  max-width: 280px;
+  margin-bottom: 40px;
+}
+
+/* Stats row */
+.login-page .welcome-stats {
+  display: flex;
+  gap: 30px;
+}
+
+.login-page .stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-page .stat-number {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.login-page .stat-label {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Decorative dumbbell watermark */
+.login-page .dumbbell-watermark {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  font-size: 8rem;
+  color: rgba(255, 255, 255, 0.04);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .login-container {
+    flex-direction: column-reverse;
+    max-width: 500px;
+  }
+
+  .login-page .form-side::after {
+    display: none;
+  }
+
+  .login-page .image-side {
+    padding: 40px 30px;
+    align-items: center;
+    text-align: center;
+    min-height: 260px;
+  }
+
+  .login-page .brand-logo {
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .login-page .welcome-title {
+    font-size: 1.8rem;
+  }
+
+  .login-page .welcome-desc {
+    display: none;
+  }
+
+  .login-page .welcome-stats {
+    justify-content: center;
+  }
+
+  .login-page .form-side {
+    padding: 40px 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-page .form-side {
+    padding: 30px 20px;
+  }
+
+  .login-page .form-title {
+    font-size: 1.6rem;
+  }
+}
