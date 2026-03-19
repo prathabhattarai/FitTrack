@@ -15,10 +15,10 @@
   --surface-4:  #28282f;
   --border:     rgba(255,255,255,0.07);
   --border-2:   rgba(255,255,255,0.11);
-  --brand:        #e86414;
-  --brand-hover:  #ff7a2e;
-  --brand-dim:    rgba(232,100,20,0.14);
-  --brand-glow:   rgba(232,100,20,0.45);
+  --brand:        #f4c43d;
+  --brand-hover:  #ffd867;
+  --brand-dim:    rgba(244,196,61,0.16);
+  --brand-glow:   rgba(244,196,61,0.45);
   --green:      #3ecf6e;
   --green-dim:  rgba(62,207,110,0.13);
   --gold:       #f0a500;
@@ -236,8 +236,8 @@ html, body, #root {
 }
 
 .tr-topbar__search:focus-within {
-  border-color: rgba(232,100,20,0.45);
-  box-shadow: 0 0 0 3px rgba(232,100,20,0.1);
+  border-color: rgba(244,196,61,0.45);
+  box-shadow: 0 0 0 3px rgba(244,196,61,0.12);
 }
 
 .tr-topbar__search svg { color: var(--muted); flex-shrink: 0; }

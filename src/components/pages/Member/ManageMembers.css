@@ -13,9 +13,9 @@
 }
 
 :root {
-  --brand: #e8302a;
-  --brand-hover: #ff4540;
-  --brand-dim: rgba(232, 48, 42, 0.13);
+  --brand: #f4c43d;
+  --brand-hover: #ffd867;
+  --brand-dim: rgba(244, 196, 61, 0.16);
   --bg: #0d0d0f;
   --surface: #111114;
   --surface-2: #18181c;
@@ -84,7 +84,7 @@ body {
   justify-content: center;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(232, 48, 42, 0.45);
+  box-shadow: 0 4px 14px rgba(244, 196, 61, 0.45);
 }
 
 .mm-sidebar__brand-name {
@@ -182,7 +182,7 @@ body {
   border-radius: 50%;
   flex-shrink: 0;
   margin-left: auto;
-  box-shadow: 0 0 6px rgba(232, 48, 42, 0.6);
+  box-shadow: 0 0 6px rgba(244, 196, 61, 0.6);
 }
 
 /* ── Bottom section ── */
@@ -233,8 +233,8 @@ body {
     box-shadow 0.18s;
 }
 .mm-topbar__search:focus-within {
-  border-color: rgba(232, 48, 42, 0.45);
-  box-shadow: 0 0 0 3px rgba(232, 48, 42, 0.1);
+  border-color: rgba(244, 196, 61, 0.45);
+  box-shadow: 0 0 0 3px rgba(244, 196, 61, 0.12);
 }
 .mm-topbar__search svg {
   color: var(--muted);

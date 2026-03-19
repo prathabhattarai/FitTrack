@@ -1,9 +1,13 @@
 import React from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 
 import LandingPage       from "./components/pages/Home/LandingPage";
 import Login             from "./components/pages/Auth/Login";
 import Register          from "./components/pages/Auth/Register";
+import VerifyAccount     from "./components/pages/Auth/VerifyAccount";
+import ForgotPassword    from "./components/pages/Auth/ForgotPassword";
+import ResetPassword     from "./components/pages/Auth/ResetPassword";
 import AdminDashboard    from "./components/pages/Admin/AdminDashboard";
 import ManageMembers     from "./components/pages/Member/ManageMembers";
 import MembershipPlan    from "./components/pages/Member/MembershipPlan";
@@ -32,33 +36,52 @@ function MembershipPlanPage() {
 }
 
 export default function App() {
+  const location = useLocation();
+
+  const withPageTransition = (component) => (
+    <motion.div
+      className="route-transition"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.26, ease: "easeOut" }}
+    >
+      {component}
+    </motion.div>
+  );
+
   return (
-    <Routes>
+    <AnimatePresence mode="wait" initial={false}>
+      <Routes location={location} key={location.pathname}>
 
       {/* ── Public ── */}
-      <Route path="/"         element={<LandingPage />} />
-      <Route path="/login"    element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/"         element={withPageTransition(<LandingPage />)} />
+      <Route path="/login"    element={withPageTransition(<Login />)} />
+      <Route path="/register" element={withPageTransition(<Register />)} />
+      <Route path="/verify-account" element={withPageTransition(<VerifyAccount />)} />
+      <Route path="/forgot-password" element={withPageTransition(<ForgotPassword />)} />
+      <Route path="/reset-password" element={withPageTransition(<ResetPassword />)} />
 
       {/* ── Dashboard ── */}
-      <Route path="/admin/dashboard"  element={<AdminDashboard />} />
-      <Route path="/dashboard"        element={<AdminDashboard />} />
-      <Route path="/member/dashboard" element={<MemberDashboard />} />
+      <Route path="/admin/dashboard"  element={withPageTransition(<AdminDashboard />)} />
+      <Route path="/dashboard"        element={withPageTransition(<AdminDashboard />)} />
+      <Route path="/member/dashboard" element={withPageTransition(<MemberDashboard />)} />
 
       {/* ── Admin Pages ── */}
-      <Route path="/members"        element={<ManageMembers />} />
-      <Route path="/membershipplan" element={<MembershipPlanPage />} />
-      <Route path="/trainer"        element={<Trainer />} />
-      <Route path="/attendance"     element={<AttendanceReport />} />
-      <Route path="/admin/settings" element={<Adminsettings />} />
+      <Route path="/members"        element={withPageTransition(<ManageMembers />)} />
+      <Route path="/membershipplan" element={withPageTransition(<MembershipPlanPage />)} />
+      <Route path="/trainer"        element={withPageTransition(<Trainer />)} />
+      <Route path="/attendance"     element={withPageTransition(<AttendanceReport />)} />
+      <Route path="/admin/settings" element={withPageTransition(<Adminsettings />)} />
 
       {/* ── Member Pages ── */}
-      <Route path="/member/membership" element={<MyMembership />} />
-      <Route path="/member/payments"   element={<PaymentHistory />} />
-      <Route path="/member/attendance" element={<Attendancehistory />} />
-      <Route path="/member/trainer"    element={<BookTrainer />} />
-      <Route path="/member/profile"    element={<MemberProfile />} />
+      <Route path="/member/membership" element={withPageTransition(<MyMembership />)} />
+      <Route path="/member/payments"   element={withPageTransition(<PaymentHistory />)} />
+      <Route path="/member/attendance" element={withPageTransition(<Attendancehistory />)} />
+      <Route path="/member/trainer"    element={withPageTransition(<BookTrainer />)} />
+      <Route path="/member/profile"    element={withPageTransition(<MemberProfile />)} />
 
-    </Routes>
+      </Routes>
+    </AnimatePresence>
   );
 }

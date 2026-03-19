@@ -66,25 +66,36 @@ export default function GymLogin({ onClose, onSwitchToRegister, closeBtn }) {
     setAlert({ type: "", message: "" });
 
     try {
-      // ── 🔌 Replace with your real API call ──────────────────
-      // const res = await fetch("/api/auth/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ email: formData.email, password: formData.password, role: formData.role }),
-      // });
-      // const data = await res.json();
-      // if (!res.ok) throw new Error(data.message || "Login failed");
-      // localStorage.setItem("token", data.token);
-      // ────────────────────────────────────────────────────────
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.email, password: formData.password }),
+      });
+      const data = await res.json();
+      
+      if (!res.ok) {
+        if (res.status === 403) {
+           setAlert({ type: "error", message: data.message });
+           setTimeout(() => {
+             if (onClose) onClose();
+             navigate("/verify-account", { state: { email: formData.email } });
+           }, 2000);
+           setLoading(false);
+           return;
+        }
+        throw new Error(data.message || "Login failed");
+      }
 
-      await new Promise((res) => setTimeout(res, 1300));
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      setAlert({ type: "success", message: `✓ Welcome back! Redirecting to your ${formData.role} dashboard...` });
+      setAlert({ type: "success", message: `✓ Welcome back! Redirecting to your dashboard...` });
 
-      // ✅ FIX: Close modal FIRST, then navigate — prevents landing page flash
-      const destination = formData.role === "Admin" ? "/admin/dashboard" : "/member/dashboard";
-      if (onClose) onClose();
-      navigate(destination);
+      setTimeout(() => {
+        const destination = data.user.role === "admin" ? "/admin/dashboard" : "/member/dashboard";
+        if (onClose) onClose();
+        navigate(destination);
+      }, 1000);
 
     } catch (err) {
       setAlert({ type: "error", message: err.message || "Invalid credentials. Please try again." });

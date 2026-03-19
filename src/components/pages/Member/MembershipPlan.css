@@ -4,9 +4,9 @@
    CSS VARIABLES  (kept in sync with AdminDashboard.css)
 ═══════════════════════════════════════ */
 :root {
-  --brand:       #e8302a;
-  --brand-hover: #ff4540;
-  --brand-dim:   rgba(232,48,42,0.13);
+  --brand:       #f4c43d;
+  --brand-hover: #ffd867;
+  --brand-dim:   rgba(244,196,61,0.16);
   --bg:          #0d0d0f;
   --bg-card:     #111114;
   --bg-card2:    #18181c;
@@ -91,7 +91,7 @@ body {
   justify-content: center;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(232,48,42,0.45);
+  box-shadow: 0 4px 14px rgba(244,196,61,0.45);
 }
 
 .ft-sidebar__brand-name {
@@ -187,7 +187,7 @@ body {
   border-radius: 50%;
   flex-shrink: 0;
   margin-left: auto;
-  box-shadow: 0 0 6px rgba(232,48,42,0.6);
+  box-shadow: 0 0 6px rgba(244,196,61,0.6);
 }
 
 /* ── Bottom section ── */
@@ -255,7 +255,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(232,48,42,0.4);
+  box-shadow: 0 4px 14px rgba(244,196,61,0.45);
   flex-shrink: 0;
 }
 

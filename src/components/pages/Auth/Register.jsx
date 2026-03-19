@@ -92,27 +92,25 @@ export default function RegisterPage({ onClose, onSwitchToLogin, closeBtn }) {
     setAlert({ type: "", message: "" });
 
     try {
-      // ── 🔌 Replace with your real API call ──────────────────
-      // const res = await fetch("/api/auth/register", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(formData),
-      // });
-      // const data = await res.json();
-      // if (!res.ok) throw new Error(data.message || "Registration failed");
-      // ────────────────────────────────────────────────────────
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+          role: "member"
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Registration failed");
 
-      await new Promise((res) => setTimeout(res, 1400));
+      setAlert({ type: "success", message: "✓ Account created! Redirecting to verification..." });
 
-      setAlert({ type: "success", message: "✓ Account created! Redirecting to login..." });
-
-      // ✅ FIX: Switch to login modal immediately (no extra setTimeout delay)
-      if (onSwitchToLogin) {
-        onSwitchToLogin();
-      } else {
+      setTimeout(() => {
         if (onClose) onClose();
-        navigate("/login");
-      }
+        navigate("/verify-account", { state: { email: formData.email } });
+      }, 1500);
 
     } catch (err) {
       setAlert({ type: "error", message: err.message || "Registration failed. Please try again." });
