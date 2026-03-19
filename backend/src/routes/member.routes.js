@@ -1,0 +1,13 @@
+const express = require('express');
+const router = express.Router();
+const memberController = require('../controllers/memberController');
+const authenticate = require('../middlewares/authMiddleware');
+
+router.use(authenticate);
+
+router.get('/profile', memberController.getProfile);
+router.put('/profile', memberController.updateProfile);
+router.get('/plans', memberController.getPlans);
+router.post('/plans/select', memberController.selectPlan);
+
+module.exports = router;
