@@ -9,6 +9,7 @@ const memberRoutes = require("./member.routes");
 const trainerRoutes = require("./trainer.routes");
 const attendanceRoutes = require("./attendance.routes");
 const paymentRoutes = require("./payment.routes");
+const workoutVideoRoutes = require("./workoutvideo.routes");
 
 router.use("/api/health", healthRoutes);
 router.use("/api/auth", authRoutes);
@@ -17,5 +18,6 @@ router.use("/api/members", memberRoutes);
 router.use("/api/trainers", trainerRoutes);
 router.use("/api/attendance", attendanceRoutes);
 router.use("/api/payments", paymentRoutes);
+router.use("/api/workout-videos", workoutVideoRoutes);
 
 module.exports = router;

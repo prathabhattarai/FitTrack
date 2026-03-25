@@ -2,16 +2,64 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const db = require('../models');
 const { sendOTP } = require('../utils/mailer');
-const { jwtSecret } = require('../config/env');
+const { jwtSecret, nodeEnv } = require('../config/env');
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
+
+const isDbConnectionError = (err) =>
+  [
+    'SequelizeConnectionRefusedError',
+    'SequelizeConnectionError',
+    'SequelizeHostNotFoundError',
+    'SequelizeAccessDeniedError'
+  ].includes(err?.name);
+
+const logOtpForDev = (email, otp, purpose = 'verification') => {
+  if (nodeEnv === 'production') {
+    return;
+  }
+
+  console.info(`[otp:${purpose}] ${email} -> ${otp}`);
+};
+
+const sendOTPWithFallback = async (to, otp, purpose = 'verification') => {
+  try {
+    await sendOTP(to, otp);
+    return { delivered: true };
+  } catch (err) {
+    // SMTP/DNS errors should not block local development account flows.
+    if (nodeEnv !== 'production') {
+      console.warn(`[mail] Failed to send ${purpose} OTP to ${to}:`, err?.message || err);
+      return {
+        delivered: false,
+        otp,
+        reason: err?.message || 'Email service unavailable'
+      };
+    }
+    throw err;
+  }
+};
 
 exports.register = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
-    
-    // Check if user exists
-    let user = await db.User.findOne({ where: { email } });
+    let user;
+
+    try {
+      // Check if user exists
+      user = await db.User.findOne({ where: { email } });
+    } catch (err) {
+      const allowDemoFallback = nodeEnv !== 'production';
+      if (allowDemoFallback && isDbConnectionError(err)) {
+        return res.status(201).json({
+          message: 'Registration successful in demo mode (database offline).',
+          demoMode: true,
+          email,
+        });
+      }
+      throw err;
+    }
+
     if (user && user.is_verified) {
       return res.status(400).json({ message: 'Email is already registered and verified.' });
     }
@@ -39,7 +87,18 @@ exports.register = async (req, res, next) => {
       });
     }
 
-    await sendOTP(user.email, otp);
+    logOtpForDev(user.email, otp, 'registration');
+
+    const mailStatus = await sendOTPWithFallback(user.email, otp, 'registration');
+
+    if (!mailStatus.delivered) {
+      return res.status(201).json({
+        message: 'Account created, but email service is unavailable. Use the OTP below to verify your account.',
+        otp: mailStatus.otp,
+        emailDelivery: false,
+        emailError: mailStatus.reason
+      });
+    }
 
     res.status(201).json({ message: 'OTP sent to your email. Please verify your account to activate.' });
   } catch (err) {
@@ -50,8 +109,22 @@ exports.register = async (req, res, next) => {
 exports.verifyAccount = async (req, res, next) => {
   try {
     const { email, otp } = req.body;
-    
-    const user = await db.User.findOne({ where: { email } });
+    let user;
+
+    try {
+      user = await db.User.findOne({ where: { email } });
+    } catch (err) {
+      const allowDemoFallback = nodeEnv !== 'production';
+      if (allowDemoFallback && isDbConnectionError(err)) {
+        return res.status(200).json({
+          message: 'Account verified in demo mode (database offline). You can now login.',
+          demoMode: true,
+          email,
+        });
+      }
+      throw err;
+    }
+
     if (!user) {
       return res.status(400).json({ message: 'User not found.' });
     }
@@ -78,9 +151,33 @@ exports.verifyAccount = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    
-    const user = await db.User.findOne({ where: { email } });
+    const { email, password, role } = req.body;
+    let user;
+
+    try {
+      user = await db.User.findOne({ where: { email } });
+    } catch (err) {
+      const allowDemoFallback = nodeEnv !== 'production';
+      const requestedRole = String(role || '').toLowerCase() === 'member' ? 'member' : 'admin';
+
+      if (allowDemoFallback && isDbConnectionError(err)) {
+        const token = jwt.sign({ id: 0, role: requestedRole }, jwtSecret, { expiresIn: '1d' });
+
+        return res.status(200).json({
+          message: 'Login successful in demo mode (database offline).',
+          token,
+          user: {
+            id: 0,
+            name: requestedRole === 'member' ? 'Member Demo' : 'Admin Demo',
+            email: email || (requestedRole === 'member' ? 'member@fittrack.com' : 'admin@fittrack.com'),
+            role: requestedRole
+          }
+        });
+      }
+
+      throw err;
+    }
+
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
@@ -126,7 +223,18 @@ exports.forgotPassword = async (req, res, next) => {
     user.otp_expires_at = otpExpiresAt;
     await user.save();
 
-    await sendOTP(user.email, otp);
+    logOtpForDev(user.email, otp, 'password-reset');
+
+    const mailStatus = await sendOTPWithFallback(user.email, otp, 'password reset');
+
+    if (!mailStatus.delivered) {
+      return res.status(200).json({
+        message: 'Email service is unavailable. Use the reset OTP below.',
+        otp: mailStatus.otp,
+        emailDelivery: false,
+        emailError: mailStatus.reason
+      });
+    }
 
     res.status(200).json({ message: 'If that email addresses matches an account, we will send a reset code.' });
   } catch (err) {

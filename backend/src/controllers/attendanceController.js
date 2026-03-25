@@ -3,7 +3,7 @@ const db = require('../models');
 exports.checkIn = async (req, res, next) => {
   try {
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-    
+
     const existing = await db.Attendance.findOne({
       where: { user_id: req.user.id, date: today }
     });

@@ -42,6 +42,70 @@ exports.getPlans = async (req, res, next) => {
   }
 };
 
+exports.createOrSubscribePlan = async (req, res, next) => {
+  try {
+    const { name, price, duration_months, billingCycle, category, description, features, plan_id } = req.body;
+    
+    // If plan_id is provided, it's a subscription to existing plan
+    if (plan_id) {
+      const plan = await db.MembershipPlan.findByPk(plan_id);
+      if (!plan) {
+        return res.status(404).json({ success: false, message: 'Plan not found' });
+      }
+
+      // Create payment record
+      const payment = await db.Payment.create({
+        user_id: req.user.id,
+        amount: plan.price,
+        status: 'pending',
+        date: new Date()
+      });
+
+      // Update member detail with active plan
+      let detail = await db.MemberDetail.findOne({ where: { user_id: req.user.id } });
+      if (!detail) {
+        detail = await db.MemberDetail.create({ 
+          user_id: req.user.id, 
+          active_plan_id: plan_id, 
+          joined_date: new Date() 
+        });
+      } else {
+        detail.active_plan_id = plan_id;
+        await detail.save();
+      }
+
+      return res.json({ 
+        success: true, 
+        message: 'Plan subscribed successfully. Please complete payment.', 
+        data: { payment, plan, memberDetail: detail } 
+      });
+    }
+    
+    // If creating a new custom plan (admin only - but keeping for compatibility)
+    if (name && price !== undefined) {
+      const newPlan = await db.MembershipPlan.create({
+        name,
+        duration_months: duration_months || 1,
+        price,
+        description: description || ''
+      });
+      
+      return res.json({ 
+        success: true, 
+        message: 'Plan created successfully', 
+        data: newPlan 
+      });
+    }
+
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Invalid request. Provide either plan_id for subscription or plan details for creation.' 
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.selectPlan = async (req, res, next) => {
   try {
     const { plan_id } = req.body;

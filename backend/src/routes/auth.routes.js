@@ -18,7 +18,8 @@ const verifySchema = Joi.object({
 
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
+  role: Joi.string().valid('Admin', 'Member', 'admin', 'member').optional()
 });
 
 const forgotPasswordSchema = Joi.object({

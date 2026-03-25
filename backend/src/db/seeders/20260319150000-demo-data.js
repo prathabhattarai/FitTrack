@@ -26,6 +26,10 @@ module.exports = {
       `SELECT * FROM MembershipPlans`
     );
 
+    const trainers = await queryInterface.sequelize.query(
+      `SELECT id, name FROM Trainers`
+    );
+
     if (plans[0].length === 0) {
       await queryInterface.bulkInsert('MembershipPlans', [
         {
@@ -53,6 +57,73 @@ module.exports = {
           updatedAt: new Date()
         }
       ]);
+    }
+
+    const existingTrainerNames = new Set(
+      trainers[0].map((trainer) => String(trainer.name || '').trim().toLowerCase())
+    );
+
+    const trainerSeedRows = [
+      {
+        name: 'Marcus Thorne',
+        specialization: 'Strength & Conditioning',
+        experience: 10,
+        hourly_rate: 45.00,
+      },
+      {
+        name: 'Priya Sharma',
+        specialization: 'Yoga & Flexibility',
+        experience: 7,
+        hourly_rate: 40.00,
+      },
+      {
+        name: 'David Chen',
+        specialization: 'Mobility & Recovery',
+        experience: 8,
+        hourly_rate: 50.00,
+      },
+      {
+        name: 'Sarah Jenkins',
+        specialization: 'Bodybuilding',
+        experience: 3,
+        hourly_rate: 42.00,
+      },
+      {
+        name: 'Robert Iron Mike',
+        specialization: 'Boxing & Self-Defense',
+        experience: 12,
+        hourly_rate: 55.00,
+      },
+      {
+        name: 'Lisa Vane',
+        specialization: 'Nutrition & Lifestyle',
+        experience: 5,
+        hourly_rate: 38.00,
+      },
+      {
+        name: 'Chris Taylor',
+        specialization: 'Calisthenics',
+        experience: 4,
+        hourly_rate: 40.00,
+      },
+      {
+        name: 'Maya Patel',
+        specialization: 'Pre/Post Natal Fitness',
+        experience: 9,
+        hourly_rate: 48.00,
+      }
+    ];
+
+    const newTrainers = trainerSeedRows
+      .filter((trainer) => !existingTrainerNames.has(String(trainer.name).trim().toLowerCase()))
+      .map((trainer) => ({
+        ...trainer,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+
+    if (newTrainers.length > 0) {
+      await queryInterface.bulkInsert('Trainers', newTrainers);
     }
   },
 
