@@ -42,7 +42,7 @@ const sendOTPWithFallback = async (to, otp, purpose = 'verification') => {
 
 exports.register = async (req, res, next) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone, gender, dob, address, plan } = req.body;
     let user;
 
     try {
@@ -74,17 +74,48 @@ exports.register = async (req, res, next) => {
       user.otp = otp;
       user.otp_expires_at = otpExpiresAt;
       user.name = name;
+      user.phone = phone || null;
+      user.address = address || null;
       await user.save();
     } else {
       user = await db.User.create({
         name,
         email,
         password: hashedPassword,
+        phone: phone || null,
+        address: address || null,
         role: role || 'member',
         otp,
         otp_expires_at: otpExpiresAt,
         is_verified: false
       });
+    }
+
+    if ((role || 'member') === 'member') {
+      const [memberDetail] = await db.MemberDetail.findOrCreate({
+        where: { user_id: user.id },
+        defaults: {
+          user_id: user.id,
+          phone: phone || null,
+          address: address || null,
+          gender: gender || null,
+          date_of_birth: dob || null,
+          selected_plan: plan || null,
+          joined_date: new Date(),
+        }
+      });
+
+      if (memberDetail) {
+        memberDetail.phone = phone || memberDetail.phone;
+        memberDetail.address = address || memberDetail.address;
+        memberDetail.gender = gender || memberDetail.gender;
+        memberDetail.date_of_birth = dob || memberDetail.date_of_birth;
+        memberDetail.selected_plan = plan || memberDetail.selected_plan;
+        if (!memberDetail.joined_date) {
+          memberDetail.joined_date = new Date();
+        }
+        await memberDetail.save();
+      }
     }
 
     logOtpForDev(user.email, otp, 'registration');
@@ -262,6 +293,32 @@ exports.resetPassword = async (req, res, next) => {
     await user.save();
 
     res.status(200).json({ message: 'Password reset successfully completed. You can now login.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.changePassword = async (req, res, next) => {
+  try {
+    const { email, currentPassword, newPassword } = req.body;
+    
+    const user = await db.User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found.' });
+    }
+
+    // Verify current password
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect.' });
+    }
+
+    // Update password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: 'Password changed successfully. Please logout and login again with your new password.' });
   } catch (err) {
     next(err);
   }

@@ -9,9 +9,21 @@ const { clientUrl } = require("./config/env");
 
 const app = express();
 
+const allowedOrigins = [
+  clientUrl,
+  "http://localhost:3000",
+  "http://localhost:3002",
+  "http://localhost:3001",
+];
+
 app.use(
   cors({
-    origin: clientUrl,
+    origin(origin, callback) {
+      // Allow server-to-server or same-origin requests without Origin header.
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("CORS: Origin not allowed"));
+    },
     credentials: true,
   })
 );

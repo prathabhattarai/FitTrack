@@ -28,7 +28,8 @@ exports.getHistory = async (req, res, next) => {
   try {
     const attendances = await db.Attendance.findAll({
       where: { user_id: req.user.id },
-      order: [['date', 'DESC']]
+      attributes: ['id', 'user_id', 'date', 'check_in_time', 'check_out_time', 'check_in_date', 'notes', 'createdAt', 'updatedAt'],
+      order: [['date', 'DESC'], ['check_in_time', 'DESC']]
     });
     res.json({ success: true, data: attendances });
   } catch (err) {

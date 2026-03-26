@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     user_id: { type: DataTypes.INTEGER, allowNull: false },
     phone: DataTypes.STRING,
     address: DataTypes.TEXT,
+    gender: DataTypes.STRING,
+    date_of_birth: DataTypes.DATEONLY,
+    selected_plan: DataTypes.STRING,
     joined_date: DataTypes.DATE,
     active_plan_id: DataTypes.INTEGER
   }, {
