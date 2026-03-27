@@ -2,7 +2,10 @@ const app = require("./app");
 const { port, nodeEnv, requireDbOnStart } = require("./config/env");
 const db = require("./models");
 
+
 const startServer = async () => {
+
+
   let dbConnected = false;
 
   try {

@@ -18,16 +18,66 @@ exports.getProfile = async (req, res, next) => {
 
 exports.updateProfile = async (req, res, next) => {
   try {
-    const { phone, address } = req.body;
+    const { fullName, email, phone, address, gender, dob, plan } = req.body;
+
+    const user = await db.User.findByPk(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    if (fullName !== undefined) {
+      user.name = fullName;
+    }
+    if (email !== undefined) {
+      user.email = email;
+    }
+    if (phone !== undefined) {
+      user.phone = phone || null;
+    }
+    if (address !== undefined) {
+      user.address = address || null;
+    }
+    await user.save();
+
     let detail = await db.MemberDetail.findOne({ where: { user_id: req.user.id } });
     if (!detail) {
-      detail = await db.MemberDetail.create({ user_id: req.user.id, phone, address });
+      detail = await db.MemberDetail.create({
+        user_id: req.user.id,
+        phone: phone || null,
+        address: address || null,
+        gender: gender || null,
+        date_of_birth: dob || null,
+        selected_plan: plan || null,
+      });
     } else {
-      detail.phone = phone || detail.phone;
-      detail.address = address || detail.address;
+      if (phone !== undefined) {
+        detail.phone = phone || null;
+      }
+      if (address !== undefined) {
+        detail.address = address || null;
+      }
+      if (gender !== undefined) {
+        detail.gender = gender || null;
+      }
+      if (dob !== undefined) {
+        detail.date_of_birth = dob || null;
+      }
+      if (plan !== undefined) {
+        detail.selected_plan = plan || null;
+      }
       await detail.save();
     }
-    res.json({ success: true, message: 'Profile updated', data: detail });
+
+    const updatedUser = await db.User.findByPk(req.user.id, {
+      attributes: { exclude: ['password', 'otp', 'otp_expires_at'] },
+      include: [{
+        model: db.MemberDetail,
+        as: 'memberDetail',
+        include: [{ model: db.MembershipPlan, as: 'activePlan' }]
+      }]
+    });
+
+    res.json({ success: true, message: 'Profile updated', data: updatedUser });
   } catch (err) {
     next(err);
   }
@@ -130,6 +180,24 @@ exports.selectPlan = async (req, res, next) => {
     }
 
     res.json({ success: true, message: 'Plan selected. Please complete payment.', data: payment });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getMyBookings = async (req, res, next) => {
+  try {
+    const bookings = await db.Booking.findAll({
+      where: { user_id: req.user.id },
+      include: [{
+        model: db.Trainer,
+        as: 'trainer',
+        attributes: ['id', 'name', 'specialization', 'image_url']
+      }],
+      order: [['date', 'DESC']]
+    });
+
+    res.json({ success: true, data: bookings });
   } catch (err) {
     next(err);
   }

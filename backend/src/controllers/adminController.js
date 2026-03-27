@@ -62,11 +62,144 @@ exports.addTrainer = async (req, res, next) => {
   }
 };
 
+exports.getTrainers = async (req, res, next) => {
+  try {
+    const trainers = await db.Trainer.findAll({
+      include: [
+        {
+          model: db.Booking,
+          as: 'bookings',
+          attributes: ['id', 'user_id', 'status']
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({ success: true, data: trainers });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateTrainer = async (req, res, next) => {
+  try {
+    const trainerId = Number(req.params.id);
+    const trainer = await db.Trainer.findByPk(trainerId);
+
+    if (!trainer) {
+      return res.status(404).json({ success: false, message: 'Trainer not found.' });
+    }
+
+    const updates = {};
+    ['name', 'specialization', 'experience', 'hourly_rate'].forEach((key) => {
+      if (typeof req.body[key] !== 'undefined') {
+        updates[key] = req.body[key];
+      }
+    });
+
+    await trainer.update(updates);
+
+    return res.json({
+      success: true,
+      message: 'Trainer updated successfully.',
+      data: trainer
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deleteTrainer = async (req, res, next) => {
+  try {
+    const trainerId = Number(req.params.id);
+    const trainer = await db.Trainer.findByPk(trainerId);
+
+    if (!trainer) {
+      return res.status(404).json({ success: false, message: 'Trainer not found.' });
+    }
+
+    await trainer.destroy();
+
+    return res.json({ success: true, message: 'Trainer deleted successfully.' });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.addPlan = async (req, res, next) => {
   try {
     const { name, duration_months, price, description } = req.body;
     const plan = await db.MembershipPlan.create({ name, duration_months, price, description });
     res.status(201).json({ success: true, message: 'Plan added successfully', data: plan });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getPlans = async (req, res, next) => {
+  try {
+    const plans = await db.MembershipPlan.findAll({
+      include: [
+        {
+          model: db.MemberDetail,
+          as: 'members',
+          attributes: ['id']
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json({ success: true, data: plans });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updatePlan = async (req, res, next) => {
+  try {
+    const planId = Number(req.params.id);
+    const plan = await db.MembershipPlan.findByPk(planId);
+
+    if (!plan) {
+      return res.status(404).json({ success: false, message: 'Plan not found.' });
+    }
+
+    const updates = {};
+    ['name', 'duration_months', 'price', 'description'].forEach((key) => {
+      if (typeof req.body[key] !== 'undefined') {
+        updates[key] = req.body[key];
+      }
+    });
+
+    await plan.update(updates);
+
+    return res.json({
+      success: true,
+      message: 'Plan updated successfully.',
+      data: plan
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.deletePlan = async (req, res, next) => {
+  try {
+    const planId = Number(req.params.id);
+    const plan = await db.MembershipPlan.findByPk(planId);
+
+    if (!plan) {
+      return res.status(404).json({ success: false, message: 'Plan not found.' });
+    }
+
+    await db.MemberDetail.update(
+      { active_plan_id: null },
+      { where: { active_plan_id: planId } }
+    );
+
+    await plan.destroy();
+
+    return res.json({ success: true, message: 'Plan deleted successfully.' });
   } catch (err) {
     next(err);
   }
@@ -202,8 +335,12 @@ exports.getTrainerBookings = async (req, res, next) => {
     const status = String(req.query.status || '').trim().toLowerCase();
     const where = {};
 
-    if (['pending', 'confirmed', 'cancelled'].includes(status)) {
+    // Only show pending and confirmed by default, exclude cancelled
+    if (status && ['pending', 'confirmed', 'cancelled'].includes(status)) {
       where.status = status;
+    } else {
+      // Default: only show pending bookings
+      where.status = 'pending';
     }
 
     const bookings = await db.Booking.findAll({
@@ -221,7 +358,6 @@ exports.getTrainerBookings = async (req, res, next) => {
         }
       ],
       order: [
-        ['status', 'ASC'],
         ['date', 'ASC'],
         ['createdAt', 'DESC']
       ]

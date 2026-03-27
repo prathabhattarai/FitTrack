@@ -10,5 +10,6 @@ router.put('/profile', memberController.updateProfile);
 router.get('/plans', memberController.getPlans);
 router.post('/plans', memberController.createOrSubscribePlan);
 router.post('/plans/select', memberController.selectPlan);
+router.get('/my-bookings', memberController.getMyBookings);
 
 module.exports = router;
