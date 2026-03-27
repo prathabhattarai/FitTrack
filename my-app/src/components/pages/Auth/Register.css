@@ -1,0 +1,498 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap");
+
+/* ===== REGISTER PAGE WRAPPER ===== */
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #0a0a0a;
+  font-family: "Poppins", sans-serif;
+  padding: 20px;
+}
+
+/* ===== OUTER CARD ===== */
+.register-container {
+  display: flex;
+  width: 100%;
+  max-width: 1060px;
+  min-height: 620px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+  position: relative;
+}
+
+/* ===================================================
+   LEFT SIDE — WELCOME (orange-to-black gradient)
+=================================================== */
+.register-page .welcome-side {
+  flex: 0.85;
+  background: linear-gradient(
+    145deg,
+    #ff3c00 0%,
+    #c42800 40%,
+    #1a0a00 80%,
+    #0a0a0a 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-page .welcome-side::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  left: -80px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 100, 0, 0.25) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+.register-page .welcome-side::after {
+  content: "";
+  position: absolute;
+  bottom: -60px;
+  right: 20px;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 60, 0, 0.15) 0%,
+    transparent 70%
+  );
+  border-radius: 50%;
+}
+
+.register-page .welcome-content {
+  position: relative;
+  z-index: 2;
+}
+
+.register-page .brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.register-page .logo-icon {
+  font-size: 2rem;
+  color: #fff;
+}
+
+.register-page .brand-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.3px;
+}
+
+.register-page .welcome-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.register-page .welcome-title span {
+  color: #ffb38a;
+}
+
+.register-page .welcome-desc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.8;
+  max-width: 260px;
+  margin-bottom: 40px;
+}
+
+.register-page .welcome-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.register-page .perk-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.register-page .perk-icon {
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.register-page .dumbbell-watermark {
+  position: absolute;
+  bottom: 30px;
+  right: 20px;
+  font-size: 8rem;
+  color: rgba(255, 255, 255, 0.04);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ===================================================
+   RIGHT SIDE — FORM
+   ✅ Black background matching Login exactly (#141414)
+=================================================== */
+.register-page .form-side {
+  flex: 1;
+  background: #141414; /* ✅ Same as Login */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 50px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Blob overlapping left side — same as login */
+.register-page .form-side::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -80px;
+  width: 180px;
+  height: 120%;
+  background: #141414; /* ✅ Same as Login */
+  border-radius: 60% 50% 50% 60% / 40% 50% 50% 40%;
+  z-index: 1;
+}
+
+.register-page .form-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* ===== FORM HEADER ===== */
+.register-page .form-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.register-page .form-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.register-page .form-subtitle {
+  font-size: 0.88rem;
+  color: #666;
+}
+
+/* ===== ALERT ===== */
+.register-page .register-alert {
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  margin-bottom: 18px;
+  width: 100%;
+  animation: alertSlide 0.3s ease forwards;
+}
+
+@keyframes alertSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register-page .register-alert.error {
+  background: rgba(255, 60, 0, 0.12);
+  border: 1px solid rgba(255, 60, 0, 0.4);
+  color: #ff7a50;
+}
+
+.register-page .register-alert.success {
+  background: rgba(76, 175, 130, 0.12);
+  border: 1px solid rgba(76, 175, 130, 0.4);
+  color: #4caf82;
+}
+
+/* ===== FORM ===== */
+.register-page .register-form {
+  width: 100%;
+}
+
+.register-page .form-group {
+  margin-bottom: 14px;
+}
+
+.register-page .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 0;
+}
+
+/* Input with icon */
+.register-page .input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.register-page .input-icon {
+  position: absolute;
+  left: 14px;
+  color: #ff3c00;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ✅ Input style matches Login exactly */
+.register-page .form-input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border-radius: 12px;
+  border: 1.5px solid #2a2a2a;
+  background: #1e1e1e;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-family: "Poppins", sans-serif;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.register-page .form-input:focus {
+  border-color: #ff3c00;
+  background: #222;
+  box-shadow: 0 0 0 3px rgba(255, 60, 0, 0.1);
+}
+
+.register-page .form-input::placeholder {
+  color: #555;
+  font-size: 0.85rem;
+}
+
+/* Keep browser autofill fields visually consistent with dark input theme */
+.register-page .form-input:-webkit-autofill,
+.register-page .form-input:-webkit-autofill:hover,
+.register-page .form-input:-webkit-autofill:focus,
+.register-page .form-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px #1e1e1e inset;
+  box-shadow: 0 0 0 1000px #1e1e1e inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.register-page .form-input.input-error {
+  border-color: #ff4444;
+  background: rgba(255, 68, 68, 0.06);
+}
+
+.register-page .form-input.input-success {
+  border-color: #4caf82;
+}
+
+.register-page .form-input[type="date"] {
+  color: #888;
+}
+.register-page .form-input[type="date"]:valid {
+  color: #fff;
+}
+
+/* Select */
+.register-page select.form-input {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23555' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-color: #1e1e1e;
+}
+
+.register-page select.form-input option {
+  background: #1e1e1e;
+  color: #fff;
+}
+
+/* Password toggle */
+.register-page .toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.register-page .toggle-password:hover {
+  color: #ff3c00;
+}
+
+.register-page .field-error-msg {
+  display: block;
+  color: #ff7a50;
+  font-size: 0.74rem;
+  margin-top: 4px;
+  padding-left: 4px;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.btn-register-submit {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #ff3c00 0%, #ff6a00 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 24px rgba(255, 60, 0, 0.35);
+  margin-top: 6px;
+}
+
+.btn-register-submit:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e03500 0%, #ff5500 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 60, 0, 0.5);
+}
+
+.btn-register-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner */
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== LOGIN LINK ===== */
+.register-page .login-prompt {
+  text-align: center;
+  font-size: 0.86rem;
+  color: #666;
+  margin-top: 16px;
+}
+
+.register-page .login-link {
+  background: none;
+  border: none;
+  color: #ff3c00;
+  font-weight: 700;
+  font-size: 0.86rem;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+
+.register-page .login-link:hover {
+  opacity: 0.75;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .register-container {
+    flex-direction: column;
+    max-width: 520px;
+  }
+
+  .register-page .form-side::before {
+    display: none;
+  }
+
+  .register-page .welcome-side {
+    padding: 36px 30px;
+    align-items: center;
+    text-align: center;
+    min-height: 220px;
+  }
+
+  .register-page .brand-logo {
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  .register-page .welcome-title {
+    font-size: 1.8rem;
+  }
+
+  .register-page .welcome-desc,
+  .register-page .welcome-perks {
+    display: none;
+  }
+
+  .register-page .form-side {
+    padding: 36px 28px;
+  }
+}
+
+@media (max-width: 560px) {
+  .register-page .form-row {
+    grid-template-columns: 1fr;
+  }
+  .register-page .form-side {
+    padding: 28px 18px;
+  }
+  .register-page .form-title {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,145 @@
+:root {
+  --ap-bg: #0b0d12;
+  --ap-panel: #10141f;
+  --ap-card: #121826;
+  --ap-border: #232a3b;
+  --ap-text: #e9edf7;
+  --ap-muted: #8d97ad;
+  --ap-accent: #e86414;
+  --ap-good: #3ecf6e;
+  --ap-bad: #ff5a5f;
+}
+
+[data-theme="light"] {
+  --ap-bg: #f4f6fb;
+  --ap-panel: #ffffff;
+  --ap-card: #ffffff;
+  --ap-border: #d7deed;
+  --ap-text: #111827;
+  --ap-muted: #4b5568;
+}
+
+.ap-root {
+  color: var(--ap-text);
+}
+
+.ap-topbar {
+  padding: 0 28px;
+}
+
+.ap-topbar__title {
+  margin: 0;
+  font-size: 30px;
+}
+
+.ap-topbar__sub {
+  margin: 6px 0 0;
+  color: var(--ap-muted);
+}
+
+.ap-card {
+  background: var(--ap-card);
+  border: 1px solid var(--ap-border);
+  border-radius: 16px;
+  padding: 18px;
+  margin: 20px;
+}
+
+.ap-status {
+  margin-bottom: 12px;
+  border: 1px solid var(--ap-border);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--ap-muted);
+}
+
+.ap-status--error {
+  color: var(--ap-bad);
+  border-color: rgba(255, 90, 95, 0.35);
+}
+
+.ap-status--success {
+  color: var(--ap-good);
+  border-color: rgba(62, 207, 110, 0.35);
+}
+
+.ap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.ap-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ap-field span {
+  color: var(--ap-muted);
+  font-size: 13px;
+}
+
+.ap-field input {
+  border: 1px solid var(--ap-border);
+  background: #0f1525;
+  color: var(--ap-text);
+  border-radius: 10px;
+  height: 42px;
+  padding: 0 12px;
+  outline: none;
+}
+
+[data-theme="light"] .ap-field input {
+  background: #ffffff;
+}
+
+.ap-field input:focus {
+  border-color: var(--ap-accent);
+}
+
+.ap-field--full {
+  grid-column: 1 / -1;
+}
+
+.ap-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.ap-btn {
+  height: 40px;
+  border-radius: 10px;
+  padding: 0 16px;
+  border: 1px solid var(--ap-border);
+  cursor: pointer;
+}
+
+.ap-btn--ghost {
+  background: transparent;
+  color: var(--ap-text);
+}
+
+.ap-btn--primary {
+  border-color: var(--ap-accent);
+  background: linear-gradient(135deg, #ff7d1f, var(--ap-accent));
+  color: #fff;
+  font-weight: 700;
+}
+
+.ap-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 980px) {
+  .ap-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ap-card {
+    margin: 14px;
+  }
+}
